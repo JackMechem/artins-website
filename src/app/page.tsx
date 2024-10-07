@@ -25,7 +25,7 @@ const Home = () => {
 			setSaved(null);
 		}
 
-		if (spent < spending) {
+		if (spent! < spending!) {
 			setSavedColor("green");
 		} else if (spent! > spending!) {
 			setSavedColor("red");
@@ -45,7 +45,7 @@ const Home = () => {
 					className="bg-slate-300 py-[5px] px-[10px] mb-[10px] w-full rounded-md"
 					type="number"
 					onChange={(e) => {
-						setIncome(e.target.value);
+						setIncome(Number(e.target.value));
 						setSpending(income! * (perToSpend / 100));
 						setSaving(income! * (perToSave / 100));
 					}}
@@ -59,7 +59,7 @@ const Home = () => {
 						className="bg-slate-300 py-[5px] px-[10px] mb-[10px] w-full rounded-md"
 						type="number"
 						onChange={(e) => {
-							setPerToSpend(e.target.value);
+							setPerToSpend(Number(e.target.value));
 						}}
 						placeholder="% To Spend"
 						defaultValue={60}
@@ -71,7 +71,7 @@ const Home = () => {
 						className="bg-slate-300 py-[5px] px-[10px] mb-[10px] w-full rounded-md"
 						type="number"
 						onChange={(e) => {
-							setPerToSave(e.target.value);
+							setPerToSave(Number(e.target.value));
 						}}
 						placeholder="% To Save"
 						defaultValue={40}
@@ -86,7 +86,7 @@ const Home = () => {
 					className="bg-slate-300 py-[5px] px-[10px] w-full rounded-md"
 					type="number"
 					onChange={(e) => {
-						setSpent(e.target.value);
+						setSpent(Number(e.target.value));
 						setSaved(spent ? income! - spent : income!);
 					}}
 					placeholder="Amount Spent"
