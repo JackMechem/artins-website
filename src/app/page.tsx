@@ -1,101 +1,142 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+import { useEffect, useState } from "react";
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
-}
+const Home = () => {
+	const [income, setIncome] = useState<number | null>(null);
+	const [spending, setSpending] = useState<number | null>(null);
+	const [saving, setSaving] = useState<number | null>(null);
+	const [spent, setSpent] = useState<number | null>(null);
+	const [saved, setSaved] = useState<number | null>(null);
+
+	const [savedColor, setSavedColor] = useState<"black" | "green" | "red">(
+		"black",
+	);
+
+	const [perToSave, setPerToSave] = useState<number>(40);
+	const [perToSpend, setPerToSpend] = useState<number>(60);
+
+	useEffect(() => {
+		setSpending(income! * (perToSpend / 100));
+		setSaving(income! * (perToSave / 100));
+		if (spent) {
+			setSaved(spent ? income! - spent : income!);
+		} else {
+			setSaved(null);
+		}
+
+		if (spent < spending) {
+			setSavedColor("green");
+		} else if (spent! > spending!) {
+			setSavedColor("red");
+		} else {
+			setSavedColor("black");
+		}
+	}, [income, spending, saving, spent, saved, perToSave, perToSpend]);
+
+	return (
+		<div className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] px-[30px] py-[30px] bg-slate-100 rounded-2xl flex flex-col gap-[10px]">
+			<h1 className="text-xl font-semibold text-center mb-[10px]">
+				Artin&apos;s Website
+			</h1>
+			<div>
+				<p className="text-xs ml-[10px] text-slate-400">Income</p>
+				<input
+					className="bg-slate-300 py-[5px] px-[10px] mb-[10px] w-full rounded-md"
+					type="number"
+					onChange={(e) => {
+						setIncome(e.target.value);
+						setSpending(income! * (perToSpend / 100));
+						setSaving(income! * (perToSave / 100));
+					}}
+					placeholder="Income"
+				/>
+			</div>
+			<div className="flex gap-[10px]">
+				<div className="w-full">
+					<p className="text-xs ml-[10px] text-slate-400">% to spend</p>
+					<input
+						className="bg-slate-300 py-[5px] px-[10px] mb-[10px] w-full rounded-md"
+						type="number"
+						onChange={(e) => {
+							setPerToSpend(e.target.value);
+						}}
+						placeholder="% To Spend"
+						defaultValue={60}
+					/>
+				</div>
+				<div className="w-full">
+					<p className="text-xs ml-[10px] text-slate-400">% to save</p>
+					<input
+						className="bg-slate-300 py-[5px] px-[10px] mb-[10px] w-full rounded-md"
+						type="number"
+						onChange={(e) => {
+							setPerToSave(e.target.value);
+						}}
+						placeholder="% To Save"
+						defaultValue={40}
+					/>
+				</div>
+			</div>
+			<div>
+				<p className="text-xs ml-[10px] text-slate-400">
+					Amount Actually Spent
+				</p>
+				<input
+					className="bg-slate-300 py-[5px] px-[10px] w-full rounded-md"
+					type="number"
+					onChange={(e) => {
+						setSpent(e.target.value);
+						setSaved(spent ? income! - spent : income!);
+					}}
+					placeholder="Amount Spent"
+				/>
+			</div>
+			<div className="flex gap-[20px] mt-[20px]">
+				<div className="bg-slate-200 p-[20px] rounded-xl flex flex-col gap-[10px] min-w-[300px]">
+					<h1 className="text-center text-lg font-semibold">Theory</h1>
+					<p className="p-[5px] bg-slate-300 rounded-md">
+						Spending: ${spending}
+					</p>
+					<p className="p-[5px] bg-slate-300 rounded-md">Saving: ${saving}</p>
+				</div>
+
+				<div className="bg-slate-200 p-[20px] rounded-xl flex flex-col gap-[10px] min-w-[300px]">
+					<h1 className="text-center text-lg font-semibold">Reality</h1>
+					<div className="p-[5px] bg-slate-300 rounded-md">
+						<p
+							className={
+								savedColor === "black"
+									? "text-black"
+									: savedColor === "green"
+										? "text-green-500"
+										: savedColor === "red"
+											? "text-red-500"
+											: ""
+							}
+						>
+							Spent: ${spent}
+						</p>
+					</div>
+					<div className="p-[5px] bg-slate-300 rounded-md">
+						<p
+							className={
+								savedColor === "black"
+									? "text-black"
+									: savedColor === "green"
+										? "text-green-500"
+										: savedColor === "red"
+											? "text-red-500"
+											: ""
+							}
+						>
+							Saved: ${saved}
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+};
+
+export default Home;
