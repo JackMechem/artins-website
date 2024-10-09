@@ -1,38 +1,48 @@
 "use client";
 
+import { useValueStore } from "@/stores/valueStore";
 import { useEffect, useState } from "react";
 
 const Home = () => {
-	const [income, setIncome] = useState<number | null>(null);
+	const valuesStore = useValueStore();
+
 	const [spending, setSpending] = useState<number | null>(null);
 	const [saving, setSaving] = useState<number | null>(null);
-	const [spent, setSpent] = useState<number | null>(null);
 	const [saved, setSaved] = useState<number | null>(null);
 
 	const [savedColor, setSavedColor] = useState<"black" | "green" | "red">(
 		"black",
 	);
 
-	const [perToSave, setPerToSave] = useState<number>(40);
-	const [perToSpend, setPerToSpend] = useState<number>(60);
-
 	useEffect(() => {
-		setSpending(income! * (perToSpend / 100));
-		setSaving(income! * (perToSave / 100));
-		if (spent) {
-			setSaved(spent ? income! - spent : income!);
+		setSpending(valuesStore.income! * (valuesStore.pToSpend / 100));
+		setSaving(valuesStore.income! * (valuesStore.pToSave / 100));
+		if (valuesStore.actuallySpent) {
+			setSaved(
+				valuesStore.actuallySpent
+					? valuesStore.income! - valuesStore.actuallySpent
+					: valuesStore.income!,
+			);
 		} else {
 			setSaved(null);
 		}
 
-		if (spent! < spending!) {
+		if (valuesStore.actuallySpent! < spending!) {
 			setSavedColor("green");
-		} else if (spent! > spending!) {
+		} else if (valuesStore.actuallySpent! > spending!) {
 			setSavedColor("red");
 		} else {
 			setSavedColor("black");
 		}
-	}, [income, spending, saving, spent, saved, perToSave, perToSpend]);
+	}, [
+		valuesStore.income,
+		spending,
+		saving,
+		valuesStore.actuallySpent,
+		saved,
+		valuesStore.pToSave,
+		valuesStore.pToSpend,
+	]);
 
 	return (
 		<div className="h-full w-full bg-slate-200">
@@ -46,11 +56,12 @@ const Home = () => {
 						className="bg-slate-300 py-[5px] px-[10px] mb-[10px] w-full rounded-md"
 						type="number"
 						onChange={(e) => {
-							setIncome(Number(e.target.value));
-							setSpending(income! * (perToSpend / 100));
-							setSaving(income! * (perToSave / 100));
+							valuesStore.setIncome(Number(e.target.value));
+							setSpending(valuesStore.income! * (valuesStore.pToSpend / 100));
+							setSaving(valuesStore.income! * (valuesStore.pToSave / 100));
 						}}
 						placeholder="Income"
+						defaultValue={valuesStore.income}
 					/>
 				</div>
 				<div className="flex gap-[10px]">
@@ -60,10 +71,10 @@ const Home = () => {
 							className="bg-slate-300 py-[5px] px-[10px] mb-[10px] w-full rounded-md"
 							type="number"
 							onChange={(e) => {
-								setPerToSpend(Number(e.target.value));
+								valuesStore.setPToSpend(Number(e.target.value));
 							}}
 							placeholder="% To Spend"
-							defaultValue={60}
+							defaultValue={valuesStore.pToSpend}
 						/>
 					</div>
 					<div className="w-full">
@@ -72,10 +83,10 @@ const Home = () => {
 							className="bg-slate-300 py-[5px] px-[10px] mb-[10px] w-full rounded-md"
 							type="number"
 							onChange={(e) => {
-								setPerToSave(Number(e.target.value));
+								valuesStore.setPToSave(Number(e.target.value));
 							}}
 							placeholder="% To Save"
-							defaultValue={40}
+							defaultValue={valuesStore.pToSave}
 						/>
 					</div>
 				</div>
@@ -87,10 +98,15 @@ const Home = () => {
 						className="bg-slate-300 py-[5px] px-[10px] w-full rounded-md"
 						type="number"
 						onChange={(e) => {
-							setSpent(Number(e.target.value));
-							setSaved(spent ? income! - spent : income!);
+							valuesStore.setActuallySpent(Number(e.target.value));
+							setSaved(
+								valuesStore.actuallySpent
+									? valuesStore.income! - valuesStore.actuallySpent
+									: valuesStore.income!,
+							);
 						}}
 						placeholder="Amount Spent"
+						defaultValue={valuesStore.actuallySpent}
 					/>
 				</div>
 				<div className="flex flex-col md:flex-row gap-[20px] mt-[20px]">
@@ -116,7 +132,7 @@ const Home = () => {
 												: ""
 								}
 							>
-								Spent: ${spent}
+								Spent: ${valuesStore.actuallySpent}
 							</p>
 						</div>
 						<div className="p-[5px] bg-slate-300 rounded-md">
