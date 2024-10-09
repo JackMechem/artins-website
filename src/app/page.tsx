@@ -46,7 +46,7 @@ const Home = () => {
 
 	return (
 		<div className="h-full w-full bg-slate-200">
-			<div className="absolute md:top-1/2 md:left-1/2 md:translate-x-[-50%] md:translate-y-[-50%] top-[20px] left-[20px] bottom-[20px] right-[20px] md:bottom-auto md:right-auto px-[30px] py-[30px] bg-slate-100 rounded-2xl flex flex-col gap-[10px]">
+			<div className="absolute md:top-1/2 md:left-1/2 md:translate-x-[-50%] md:translate-y-[-50%] top-[20px] left-[20px] bottom-[20px] right-[20px] md:bottom-auto md:right-auto px-[30px] py-[30px] bg-slate-100 rounded-2xl flex flex-col gap-[10px] overflow-y-scroll">
 				<h1 className="text-xl font-semibold text-center mb-[10px]">
 					Artin&apos;s Spending Calculator
 				</h1>
